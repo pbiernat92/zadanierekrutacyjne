@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Anetka\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Anetka\\.nuget\\packages"
+    ]
+  }
+}
