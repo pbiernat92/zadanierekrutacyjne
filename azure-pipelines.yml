@@ -7,28 +7,21 @@ trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
-
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  vmImage: ubuntu-latest
 
 steps:
-- task: NuGetToolInstaller@1
+- checkout: self
+  persistCredentials: true
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+- script: |
+   git config --global user.email "piotrbiernat92@gmail.com" & git config --global user.name "pbiernat92"
+  workingDirectory: $(System.DefaultWorkingDirectory)
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+- script: |
+   git checkout -b main
+   echo 'This is a test' > data.txt
+   git add -A
+   git commit -m "deployment $(Build.BuildNumber)"
+   git push --set-upstream origin main 
+  displayName: Add data.txt file
+  workingDirectory: $(System.DefaultWorkingDirectory)
